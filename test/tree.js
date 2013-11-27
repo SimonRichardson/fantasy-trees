@@ -10,6 +10,7 @@ var λ = require('fantasy-check/src/adapters/nodeunit'),
     Identity = require('fantasy-identities'),
     Tree = require('../fantasy-trees'),
 
+    constant = combinators.constant,
     identity = combinators.identity;
 
 function concat(a, b) {
@@ -17,38 +18,45 @@ function concat(a, b) {
 }
 
 function show(a) {
-    return '[' + a.fold([], concat).toString() + ']';
+    var x = '';
+    a.map(function(a) {
+        x = a;
+    });
+    return '[' + x + ']';
 }
 
 function run(a) {
     return Identity.of(show(a));
 }
 
-exports.list = {
-
-    // Applicative Functor tests
-    'All (Applicative)': applicative.laws(λ)(Tree, run),
-    'Identity (Applicative)': applicative.identity(λ)(Tree, run),
-    'Composition (Applicative)': applicative.composition(λ)(Tree, run),
-    'Homomorphism (Applicative)': applicative.homomorphism(λ)(Tree, run),
-    'Interchange (Applicative)': applicative.interchange(λ)(Tree, run),
-
+exports.tree = {
+    
     // Functor tests
     'All (Functor)': functor.laws(λ)(Tree.of, run),
     'Identity (Functor)': functor.identity(λ)(Tree.of, run),
     'Composition (Functor)': functor.composition(λ)(Tree.of, run),
 
-    // Monad tests
-    'All (Monad)': monad.laws(λ)(Tree, run),
-    'Left Identity (Monad)': monad.leftIdentity(λ)(Tree, run),
-    'Right Identity (Monad)': monad.rightIdentity(λ)(Tree, run),
-    'Associativity (Monad)': monad.associativity(λ)(Tree, run),
-
-    // Monoid tests
-    'All (Monoid)': monoid.laws(λ)(Tree, run),
-    'leftIdentity (Monoid)': monoid.leftIdentity(λ)(Tree, run),
-    'rightIdentity (Monoid)': monoid.rightIdentity(λ)(Tree, run),
-    'associativity (Monoid)': monoid.associativity(λ)(Tree, run)
-
     // Manual tests
+    'test map': function(test) {
+        var a = Tree.Node(
+            3,
+            Tree.Node(
+                4,
+                Tree.Empty,
+                Tree.Empty
+            ),
+            Tree.Node(
+                5,
+                Tree.Empty,
+                Tree.Empty
+            )
+        );
+        console.log('\n-------');
+        a.map(function(a) {
+            console.log(a);
+            return a;
+        });
+        test.ok(true);
+        test.done();
+    }
 };
