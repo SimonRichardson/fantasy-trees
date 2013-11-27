@@ -8,7 +8,7 @@ var λ = require('fantasy-check/src/adapters/nodeunit'),
     combinators = require('fantasy-combinators'),
 
     Identity = require('fantasy-identities'),
-    Tree = require('../fantasy-trees'),
+    Tree = require('../fantasy-trees').FingerTree,
 
     constant = combinators.constant,
     identity = combinators.identity;
@@ -37,26 +37,4 @@ exports.tree = {
     'Composition (Functor)': functor.composition(λ)(Tree.of, run),
 
     // Manual tests
-    'test map': function(test) {
-        var a = Tree.Node(
-            3,
-            Tree.Node(
-                4,
-                Tree.Empty,
-                Tree.Empty
-            ),
-            Tree.Node(
-                5,
-                Tree.Empty,
-                Tree.Empty
-            )
-        );
-        console.log('\n-------');
-        a.map(function(a) {
-            console.log(a);
-            return a;
-        });
-        test.ok(true);
-        test.done();
-    }
 };

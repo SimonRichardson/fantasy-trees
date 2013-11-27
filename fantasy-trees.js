@@ -1,4 +1,8 @@
-var Tree = require('./src/tree');
+var BinaryTree = require('./src/binary-tree'),
+    FingerTree = require('./src/finger-tree');
 
 if (typeof module != 'undefined')
-    module.exports = Tree;
+    module.exports = {
+        BinaryTree: BinaryTree,
+        FingerTree: FingerTree
+    };
