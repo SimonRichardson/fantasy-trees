@@ -20,15 +20,25 @@ Tree.of = function(x) {
 Tree.empty = function() {
     return Tree.Empty;
 };
-
-// Derived
-Tree.prototype.map = function(f) {
+Tree.prototype.chain = function(f) {
     var scope = this;
     return scope.cata({
         Empty: constant(scope),
         Node: function(x, l, r) {
-            return Tree.Node(f(x), l.map(f), r.map(f));
+            return f(x, l.chain(f), r.chain(f));
         }
+    });
+};
+
+// Derived
+Tree.prototype.ap = function(a) {
+    return this.chain(function(f) {
+        return a.map(f);
+    });
+};
+Tree.prototype.map = function(f) {
+    return this.chain(function(x, l, r) {
+        return Tree.Node(f(x), l, r);
     });
 };
 

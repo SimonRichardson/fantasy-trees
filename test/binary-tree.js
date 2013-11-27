@@ -20,7 +20,7 @@ function concat(a, b) {
 function show(a) {
     var x = '';
     a.map(function(a) {
-        x = a;
+        x += a + ', ';
     });
     return '[' + x + ']';
 }
@@ -30,11 +30,24 @@ function run(a) {
 }
 
 exports.tree = {
+
+    // Applicative Functor tests
+    'All (Applicative)': applicative.laws(λ)(Tree, run),
+    'Identity (Applicative)': applicative.identity(λ)(Tree, run),
+    'Composition (Applicative)': applicative.composition(λ)(Tree, run),
+    'Homomorphism (Applicative)': applicative.homomorphism(λ)(Tree, run),
+    'Interchange (Applicative)': applicative.interchange(λ)(Tree, run),
     
     // Functor tests
     'All (Functor)': functor.laws(λ)(Tree.of, run),
     'Identity (Functor)': functor.identity(λ)(Tree.of, run),
     'Composition (Functor)': functor.composition(λ)(Tree.of, run),
 
+    // Monad tests
+    'All (Monad)': monad.laws(λ)(Tree, run),
+    'Left Identity (Monad)': monad.leftIdentity(λ)(Tree, run),
+    'Right Identity (Monad)': monad.rightIdentity(λ)(Tree, run),
+    'Associativity (Monad)': monad.associativity(λ)(Tree, run)
+    
     // Manual tests
 };
