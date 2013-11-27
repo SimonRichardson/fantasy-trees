@@ -13,14 +13,16 @@ var λ = require('fantasy-check/src/adapters/nodeunit'),
     constant = combinators.constant,
     identity = combinators.identity;
 
-function concat(a, b) {
-    return a.concat(b);
+function ord(x) {
+    return function(y) {
+        return x < y ? -1 : x > y ? 1 : 0;
+    };
 }
 
 function show(a) {
     var x = '';
     a.map(function(a) {
-        x += a + ', ';
+        x += a;
     });
     return '[' + x + ']';
 }
@@ -47,7 +49,17 @@ exports.tree = {
     'All (Monad)': monad.laws(λ)(Tree, run),
     'Left Identity (Monad)': monad.leftIdentity(λ)(Tree, run),
     'Right Identity (Monad)': monad.rightIdentity(λ)(Tree, run),
-    'Associativity (Monad)': monad.associativity(λ)(Tree, run)
+    'Associativity (Monad)': monad.associativity(λ)(Tree, run),
     
     // Manual tests
+    'when testing insert should be correct value': function(test) {
+        var a = Tree.of(1).insert(2, ord).insert(3, ord);
+        test.equal(show(a), '[321]');
+        test.done();
+    },
+    'when testing contains should be correct value': function(test) {
+        var a = Tree.of(1).insert(2, ord).insert(3, ord);
+        test.ok(a.contains(ord(2)));
+        test.done();
+    }
 };

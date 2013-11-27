@@ -24,8 +24,8 @@ Tree.prototype.chain = function(f) {
     var scope = this;
     return scope.cata({
         Empty: constant(scope),
-        Node: function(x, l, r) {
-            return f(x, l.chain(f), r.chain(f));
+        Node: function(x, y, z) {
+            return f(x, y.chain(f), z.chain(f));
         }
     });
 };
@@ -37,8 +37,33 @@ Tree.prototype.ap = function(a) {
     });
 };
 Tree.prototype.map = function(f) {
-    return this.chain(function(x, l, r) {
-        return Tree.Node(f(x), l, r);
+    return this.chain(function(x, y, z) {
+        return Tree.Node(f(x), y, z);
+    });
+};
+
+Tree.prototype.insert = function(a, f) {
+    return this.cata({
+        Empty: function() {
+            return Tree.of(a);
+        },
+        Node: function(x, y, z) {
+            var b = f(x)(a);
+            return b < 0 ? Tree.Node(x, y.insert(a, f), z) :
+                    b > 0 ? Tree.Node(x, y, z.insert(a, f)) :
+                            Tree.Node(x, y, z);
+        }
+    });
+};
+Tree.prototype.contains = function(f) {
+    return this.cata({
+        Empty: constant(false),
+        Node: function(x, y, z) {
+            var b = f(x);
+            return b > 0 ? y.contains(f) :
+                    b < 0 ? z.contains(f) :
+                            true;
+        }
     });
 };
 
