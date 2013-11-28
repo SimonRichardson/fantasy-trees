@@ -29,6 +29,20 @@ Tree.prototype.chain = function(f) {
         }
     });
 };
+Tree.prototype.fold = function(v, f) {
+    return this.cata({
+        Empty: constant(v),
+        Node: function(x, y, z) {
+            return z.fold(
+                y.fold(
+                    f(v, x),
+                    f
+                ),
+                f
+            );
+        }
+    });
+};
 
 // Derived
 Tree.prototype.ap = function(a) {

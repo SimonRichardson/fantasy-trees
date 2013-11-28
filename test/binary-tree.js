@@ -19,6 +19,10 @@ function ord(x) {
     };
 }
 
+function concat(a, b) {
+    return a + b;
+}
+
 function show(a) {
     var x = '';
     a.map(function(a) {
@@ -60,6 +64,11 @@ exports.tree = {
     'when testing contains should be correct value': function(test) {
         var a = Tree.of(1).insert(2, ord).insert(3, ord);
         test.ok(a.contains(ord(2)));
+        test.done();
+    },
+    'when testing fold should be correct value': function(test) {
+        var a = Tree.of(1).insert(2, ord).insert(3, ord);
+        test.equal(a.fold(1, concat), 7);
         test.done();
     }
 };
